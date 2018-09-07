@@ -66,6 +66,7 @@ public class AddressBook {
      * =========================================================================
      */
     private static final String MESSAGE_ADDED = "New person added: %1$s, Phone: %2$s, Email: %3$s";
+    private static final String MESSAGE_COUNTED = "Number of persons in address book: %1$s";
     private static final String MESSAGE_ADDRESSBOOK_CLEARED = "Address book has been cleared!";
     private static final String MESSAGE_COMMAND_HELP = "%1$s: %2$s";
     private static final String MESSAGE_COMMAND_HELP_PARAMETERS = "\tParameters: %1$s";
@@ -120,6 +121,10 @@ public class AddressBook {
                                                     + "the last find/list call.";
     private static final String COMMAND_DELETE_PARAMETER = "INDEX";
     private static final String COMMAND_DELETE_EXAMPLE = COMMAND_DELETE_WORD + " 1";
+
+    private static final String COMMAND_COUNT_WORD = "count";
+    private static final String COMMAND_COUNT_DESC = "Count the number of persons in list.";
+    private static final String COMMAND_COUNT_EXAMPLE = COMMAND_COUNT_WORD;
 
     private static final String COMMAND_CLEAR_WORD = "clear";
     private static final String COMMAND_CLEAR_DESC = "Clears address book permanently.";
@@ -377,6 +382,8 @@ public class AddressBook {
             return executeListAllPersonsInAddressBook();
         case COMMAND_DELETE_WORD:
             return executeDeletePerson(commandArgs);
+        case COMMAND_COUNT_WORD:
+            return  executeCountPersons();
         case COMMAND_CLEAR_WORD:
             return executeClearAddressBook();
         case COMMAND_HELP_WORD:
@@ -559,6 +566,18 @@ public class AddressBook {
     }
 
     /**
+     * Count the number of persons in the list.
+     *
+     * @see #executeCountPersons()
+     * @return count message
+     */
+    private static String executeCountPersons(){
+        ArrayList<String[]> toBeCounted = getAllPersonsInAddressBook();
+        final int count = toBeCounted.size();
+        return String.format(MESSAGE_COUNTED, count);
+    }
+
+    /**
      * Clears all persons in the address book.
      *
      * @return feedback display message for the operation result
@@ -578,6 +597,7 @@ public class AddressBook {
         showToUser(toBeDisplayed);
         return getMessageForPersonsDisplayedSummary(toBeDisplayed);
     }
+
 
     /**
      * Requests to terminate the program.
@@ -1086,6 +1106,7 @@ public class AddressBook {
                 + getUsageInfoForFindCommand() + LS
                 + getUsageInfoForViewCommand() + LS
                 + getUsageInfoForDeleteCommand() + LS
+                + getUsageInfoForCountCommand() + LS
                 + getUsageInfoForClearCommand() + LS
                 + getUsageInfoForExitCommand() + LS
                 + getUsageInfoForHelpCommand();
@@ -1126,8 +1147,14 @@ public class AddressBook {
 
     /** Returns string for showing 'help' command usage instruction */
     private static String getUsageInfoForHelpCommand() {
-        return String.format(MESSAGE_COMMAND_HELP, COMMAND_HELP_WORD, COMMAND_HELP_DESC)
-                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_HELP_EXAMPLE);
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_HELP_WORD, COMMAND_HELP_DESC) + LS
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_HELP_EXAMPLE) + LS;
+    }
+
+    /** Returns string for showing 'count' command usage instruction */
+    private static String getUsageInfoForCountCommand() {
+        return String.format(MESSAGE_COMMAND_HELP, COMMAND_COUNT_WORD, COMMAND_COUNT_DESC) + LS
+                + String.format(MESSAGE_COMMAND_HELP_EXAMPLE, COMMAND_COUNT_EXAMPLE) + LS;
     }
 
     /** Returns the string for showing 'exit' command usage instruction */
